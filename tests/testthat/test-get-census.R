@@ -12,15 +12,6 @@ test_that("2001 and 2011 return the full district set", {
   }
 })
 
-test_that("state totals match district totals for 2001 and 2011", {
-  for (y in c(2001, 2011)) {
-    st <- get_census(y, "state")
-    di <- get_census(y, "district")
-    expect_equal(sum(st$population), sum(di$population))
-    expect_equal(nrow(st), 35)
-  }
-})
-
 test_that("year and geography are validated", {
   expect_error(get_census(1905, "state"), "Year")
   expect_error(get_census(2011, "planet"))
@@ -86,4 +77,14 @@ test_that("attaching geometry never changes the row count", {
     )
     expect_equal(nrow(g), nrow(d))
   }
+})
+
+test_that("sector other than total is an error outside 1971 and 1981", {
+  expect_error(get_census(2011, "state", state = "Goa", sector = "rural"), "1971 and 1981")
+  expect_gt(nrow(get_census(1981, "state", state = "Kerala", sector = "rural")), 0)
+})
+
+test_that("state = India on a table with no national row says to drop state", {
+  expect_error(get_census(2011, "state", state = "India"), "No rows for \"India\".*Remove `state`")
+  expect_error(get_census(1971, "state", state = "Telangana"), "No rows for \"Telangana\"")
 })

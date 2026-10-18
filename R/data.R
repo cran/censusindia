@@ -136,7 +136,13 @@
 #'
 #' Subdistrict (tehsil/taluka) population from the 2011 Census.
 #'
-#' @format A tibble with 7,074 rows and 15 columns:
+#' A subdistrict crossing a district line is listed once per district, marked
+#' "(Part)". Population, males, females and households come from
+#' [census_2011_demographics()] and sum to [census_2011_pca]. Villages, towns,
+#' area and density come from the Dataverse source and are NA where it has no
+#' match.
+#'
+#' @format A tibble with 5,988 rows and 15 columns:
 #' \describe{
 #'   \item{year}{Census year for population data (2011)}
 #'   \item{geography}{Geographic level ("subdistrict")}
@@ -298,19 +304,38 @@
 #'   `PC01_PCA_TOT`).
 "census_2001_pca_full"
 
-#' Population projections -- state level (2011-2036)
+#' Population projections - state level (2011-2036)
 #'
-#' MOHFW population projections at state level, based on the 2011 Census.
-#' Covers 38 entries (36 states/UTs, India total, and Ladakh) with annual
-#' projections from 2011 to 2036. Values are absolute numbers (the source
-#' rounds in thousands independently, so `population` may differ from
-#' `males + females` by up to 1000).
+#' MOHFW population projections for each state, from the 2011 Census. The
+#' table gives one projection for each year from 2011 to 2036.
 #'
-#' Values match the report's Table 8. India and Odisha follow the July 2020
-#' edition, which revised Odisha's male projection, so both rows differ from
-#' the November 2019 print linked below.
+#' India has 36 states and UTs. The table has 39 entries:
+#' \itemize{
+#'   \item 28 states.
+#'   \item 9 UTs, with the names that the report uses: Andaman & Nicobar
+#'     Islands, Chandigarh, Delhi, Jammu & Kashmir, Ladakh, Lakshadweep,
+#'     Puducherry, "Dadra & Nagar Haveli" and "Daman & Diu". Jammu & Kashmir
+#'     does not include Ladakh.
+#'   \item "Dadra & Nagar Haveli and Daman & Diu". The two UTs became one UT
+#'     in January 2020. This row is the sum of the two UTs. It has the same
+#'     name as in the LGD district table, so data from 2020 and later can join.
+#'   \item "India", the national total.
+#' }
+#' Thus the population of the two old UTs is in the table two times. To get
+#' the sum of the states, remove "India". Also remove the merged UT, or remove
+#' the two old UTs.
 #'
-#' @format A tibble with 988 rows and 5 columns:
+#' Values are numbers of persons. The source rounds persons, males and
+#' females to thousands separately. Thus `population` can be different from
+#' `males + females` by a maximum of 1000. For the merged UT, the maximum is
+#' 2000, because the row is the sum of two rounded rows.
+#'
+#' Values are the same as Table 8 of the report. The India and Odisha rows
+#' use the July 2020 edition. That edition changed the male projection for
+#' Odisha. Thus the two rows are different from the November 2019 report
+#' at the link below.
+#'
+#' @format A tibble with 1014 rows (39 entries x 26 years) and 5 columns:
 #' \describe{
 #'   \item{year}{Projection year (2011-2036)}
 #'   \item{state_name_harmonized}{Harmonized state name for joining}
@@ -372,9 +397,9 @@
 #' district sums do not exactly reproduce [population_projections_state],
 #' and Karnataka inherits the age tables' disagreement with
 #' [population_projections_district].
-#' Theni (Tamil Nadu) is NA for 2017-2031, and Moga (Punjab) and Tapi
-#' (Gujarat) for 2022-2026, as in [population_projections_district_age()]. Use
-#' [population_projections_district] for totals in those years.
+#' Theni (Tamil Nadu) 2017-2031 and the 80+ group of Moga (Punjab) and Tapi
+#' (Gujarat) in 2022-2026 are derived, as in
+#' [population_projections_district_age()].
 #'
 #' @source International Institute for Population Sciences. Projection of
 #'   District Level Annual Population by Quinquennial Agegroup and Sex.
@@ -533,3 +558,56 @@
 #' }
 #' @source Census of India 2011, A-11 Scheduled Tribe tables.
 "census_2011_tribes"
+
+#' Census 1931 castes by religion
+#'
+#' Population of every caste and community listed in the caste tables of the
+#' 1931 Census, cross-classified by religion, for 24 provinces, princely states
+#' and agencies of British India.
+#'
+#' A religion column is NA where the province's table has no column for that
+#' religion, and 0 where the column exists and no one was returned. Ajmer-Merwara
+#' has totals only, so its religion columns and `total` are NA. Residual
+#' entries such as "Caste Unspecified" and "Indian Christian" are rows of their
+#' own.
+#'
+#' @format A tibble with 2,226 rows and 17 columns:
+#' \describe{
+#'   \item{year}{Census year (1931)}
+#'   \item{province}{Province, princely state or agency, standardised}
+#'   \item{unit_type}{`"British Province"`, `"Princely State"` or `"Agency"`}
+#'   \item{caste}{Caste or community as printed}
+#'   \item{rank}{Position in the province's ranked caste list, 1 the largest}
+#'   \item{hindu,muslim,sikh,jain,buddhist,christian,tribal,parsi,jew}{Persons
+#'     of the caste returned under each religion; `tribal` is the 1931 "Tribal"
+#'     or "Primitive" religion return}
+#'   \item{total}{Sum of the religion columns}
+#'   \item{total_ranked_list}{Total printed in the province's ranked list; NA
+#'     for the Andaman & Nicobar Islands}
+#'   \item{notes}{Compiler's flag, for example where `total` and
+#'     `total_ranked_list` disagree}
+#' }
+#' @source Jolad, Shivakumar, Kalyani, Gaurav and Baharadia, Samarth (2026).
+#'   "Database of castes." Harvard Dataverse. \doi{10.7910/DVN/WT5VIY}.
+#'   Digitised from the provincial, princely state and agency reports of the
+#'   Census of India, 1931.
+"census_1931_castes"
+
+#' Census 1931 exterior castes
+#'
+#' Castes and tribes the 1931 Census treated as exterior, with their
+#' population, by province or state section of Appendix I of the Census of
+#' India 1931, Volume I. "Exterior castes" is the report's term.
+#'
+#' @format A tibble with 533 rows and 5 columns:
+#' \describe{
+#'   \item{year}{Census year (1931)}
+#'   \item{section}{Province or state section of the appendix}
+#'   \item{caste}{Caste or tribe as printed, with bracketed qualifiers}
+#'   \item{population}{Persons treated as exterior}
+#'   \item{note}{Compiler's remark}
+#' }
+#' @source Jolad, Shivakumar, Kalyani, Gaurav and Baharadia, Samarth (2026).
+#'   "Database of castes." Harvard Dataverse. \doi{10.7910/DVN/WT5VIY}.
+#'   Census of India, 1931, Volume I, Appendix I: Exterior Castes.
+"census_1931_exterior_castes"
