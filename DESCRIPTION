@@ -1,9 +1,12 @@
 Package: censusindia
 Title: Census of India Data, 1901-2011, with Boundaries and Projections
-Version: 0.2.1
-Authors@R: 
+Version: 0.3.0
+Authors@R: c(
     person("Saket", "Choudhary", , "saketc@iitb.ac.in", role = c("aut", "cre", "cph"),
-           comment = c(ORCID = "0000-0001-5202-7633"))
+           comment = c(ORCID = "0000-0001-5202-7633")),
+    person("Atharva", "Shetwe", , "athshetwe@gmail.com", role = "aut",
+           comment = c(ORCID = "0009-0001-0409-3334"))
+    )
 Description: Tables from every decennial Census of India from 1901 to 2011:
     population time series, Primary Census Abstracts at state, district and
     sub-district level, mother tongue tables, Scheduled Caste and
@@ -33,9 +36,10 @@ LazyData: true
 LazyDataCompression: xz
 Config/roxygen2/version: 8.1.1
 NeedsCompilation: no
-Packaged: 2026-10-18 04:34:38 UTC; mcclintock
+Packaged: 2026-11-05 07:58:50 UTC; mcclintock
 Author: Saket Choudhary [aut, cre, cph] (ORCID:
-    <https://orcid.org/0000-0001-5202-7633>)
+    <https://orcid.org/0000-0001-5202-7633>),
+  Atharva Shetwe [aut] (ORCID: <https://orcid.org/0009-0001-0409-3334>)
 Maintainer: Saket Choudhary <saketc@iitb.ac.in>
 Repository: CRAN
-Date/Publication: 2026-10-18 11:00:26 UTC
+Date/Publication: 2026-11-05 08:10:02 UTC
